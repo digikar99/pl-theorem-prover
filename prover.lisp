@@ -124,6 +124,11 @@ SUBFORMULAE:
   (and (node-leaf-p node)
        (eq :open (node-state node))))
 
+(defun find-leaf (node)
+  (if (null (node-children node))
+      node
+      (some #'find-leaf (node-children node))))
+
 (defun expand-tableaux (tableaux)
   (declare (type tableaux tableaux))
   (let* ((nodes (tableaux-nodes tableaux))
@@ -134,7 +139,7 @@ SUBFORMULAE:
          ;; (not ...), (or ...), (and ...)
          (op (first formula))
          (truth-value (node-truth-value node))
-         (leaf-node (find-if #'node-leaf-p nodes))
+         (leaf-node (find-leaf node))
          (new-nodes))
 
     (assert leaf-node)
